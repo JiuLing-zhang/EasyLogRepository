@@ -24,4 +24,12 @@ namespace EasyLogRepository.Models
         警告 = 1,
         错误 = 2
     }
+
+    public class LogVO
+    {
+        public string SessionId { get; set; }
+        public string CreateTime { get; set; }
+        public string LogType { get; set; }
+        public string Message { get; set; }
+    }
 }
