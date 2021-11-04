@@ -21,7 +21,7 @@ namespace EasyLogRepository.Data
         {
             return Task.Run(() =>
             {
-                List<TableLogs> dbList = _dbContext.Logs.ToList();
+                List<TableLogs> dbList = _dbContext.Logs.ToList().OrderByDescending(x => x.CreateTime).ToList();
 
                 var result = new List<LogVO>();
                 foreach (var item in dbList)
@@ -37,7 +37,7 @@ namespace EasyLogRepository.Data
 
                 return result;
             });
-         
+
         }
     }
 }
