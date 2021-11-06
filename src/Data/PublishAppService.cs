@@ -63,7 +63,7 @@ namespace EasyLogRepository.Data
                     CreateTime = DateTime.Now,
                     VersionCode = versionCode,
                     VersionName = versionName,
-                    FilePath = $"/{directoryPath}/{fileName}"
+                    FilePath = $"{directoryPath}/{fileName}"
                 };
                 _dbContext.AppInfo.Add(appInfo);
                 var count = await _dbContext.SaveChangesAsync();
