@@ -32,19 +32,12 @@ namespace EasyLogRepository.Controllers
 
                 string downloadUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/api/download/{HttpUtility.UrlEncode(appInfo.FilePath)}";
                 var obj = new { appInfo.VersionCode, appInfo.VersionName, DownloadUrl = downloadUrl };
-                return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult<object> { Code = 0, Message = "提交成功", Data = obj });
+                return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult<object> { Code = 0, Message = "", Data = obj });
             }
             catch (Exception ex)
             {
                 return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult() { Code = 999, Message = $"系统错误。{ex.Message}" });
             }
-        }
-
-        public IActionResult Download()
-        {
-            var addrUrl = @"D:\F\学习\vs2017\netcore\Study.AspNetCore\WebApp02-1\wwwroot\bak\love.apk";
-            var stream = System.IO.File.OpenRead(addrUrl);
-            return File(stream, "application/vnd.android.package-archive", Path.GetFileName(addrUrl));
         }
     }
 }
