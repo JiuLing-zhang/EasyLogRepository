@@ -41,12 +41,12 @@ namespace EasyLogRepository.Data
                 string publishAppKey = _configuration.GetSection("PublishAppKey").Value;
                 if (publishAppKey != key)
                 {
-                    // result.Code = 2;
-                    // result.Message = "Key值不正确";
-                    // return result;
+                    result.Code = 2;
+                    result.Message = "Key值不正确";
+                    return result;
                 }
 
-                var fileName = "MusicPlayerOnline.apk";
+                var fileName = $"MusicPlayerOnline{versionName}.apk";
                 var directoryPath = "uploads";
                 var directory = Path.Combine(_hostEnvironment.ContentRootPath, directoryPath);
                 if (!System.IO.Directory.Exists(directory))
