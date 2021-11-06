@@ -23,6 +23,9 @@
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "MySQL": "server=xx;userid=xx;password=xx;database=xx;"
-  }
+  },
+  "PublishAppKey": "xxxx"
 }
 ```
+其中  
+`PublishAppKey`：发布app时验证身份用的key。（这验证方式真偷懒）:sweat_smile::sweat_smile:  

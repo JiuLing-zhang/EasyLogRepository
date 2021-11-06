@@ -1,82 +1,46 @@
 ﻿@page "/publish"
-
-@using System
-@using System.IO
-@using Microsoft.AspNetCore.Hosting
-@using Microsoft.Extensions.Logging
-@inject IWebHostEnvironment Environment
+@using EasyLogRepository.Data
+@inject PublishAppService _publishAppService
 
 <h3>Publish app</h3>
-
 <p>
     <label>
-        Max file size:
-        <input type="number" @bind="maxFileSize" />
+        Key:
+        <input type="text" @bind="_key" />
     </label>
 </p>
-
 <p>
     <label>
-        Upload up to @maxAllowedFiles of up to @maxFileSize bytes:
+        Version code:
+        <input type="number" @bind="_versionCode" />
+    </label>
+</p>
+<p>
+    <label>
+        Version name:
+        <input type="text" @bind="_versionName" />
+    </label>
+</p>
+<p>
+    <label>
         <InputFile OnChange="@LoadFiles" multiple />
     </label>
 </p>
 
-@if (isLoading)
-{
-    <p>Uploading...</p>
-}
-else
-{
-    <ul>
-        @foreach (var file in loadedFiles)
-        {
-            <li>
-                <ul>
-                    <li>Name: @file.Name</li>
-                    <li>Last modified: @file.LastModified.ToString()</li>
-                    <li>Size (bytes): @file.Size</li>
-                    <li>Content type: @file.ContentType</li>
-                </ul>
-            </li>
-        }
-    </ul>
-}
+<p>@_message</p>
 
 @code {
-    private List<IBrowserFile> loadedFiles = new();
-    private long maxFileSize = 1024 * 15;
-    private int maxAllowedFiles = 1;
-    private bool isLoading;
-
+    private const int MaxAllowedFiles = 1;
+    private string _message;
+    private string _key;
+    private int _versionCode;
+    private string _versionName;
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
-        isLoading = true;
-        loadedFiles.Clear();
+        _message = "正在上传";
+        IBrowserFile file = e.GetMultipleFiles(MaxAllowedFiles)[0];
+        var result = await _publishAppService.UploadFile(file, _key, _versionCode, _versionName);
+        _message = result.Message;
 
-        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
-        {
-            try
-            {
-                loadedFiles.Add(file);
-
-                var trustedFileNameForFileStorage = Path.GetRandomFileName();
-                var directory = Path.Combine(Environment.ContentRootPath, Environment.EnvironmentName, "unsafe_uploads");
-                if (!System.IO.Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                var path = Path.Combine(directory, trustedFileNameForFileStorage);
-
-                await using FileStream fs = new(path, FileMode.Create);
-                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        isLoading = false;
     }
 }

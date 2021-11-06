@@ -10,7 +10,7 @@ namespace EasyLogRepository.DbContext
     public class MyDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         public DbSet<TableLogs> Logs { get; set; }
-
+        public DbSet<AppInfo> AppInfo { get; set; }
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
 

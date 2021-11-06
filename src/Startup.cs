@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyLogRepository.DbContext;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyLogRepository
@@ -37,6 +38,8 @@ namespace EasyLogRepository
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<LogService>();
+            services.AddSingleton<PublishAppService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +66,14 @@ namespace EasyLogRepository
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
+                {
+                    { ".apk","application/vnd.android.package-archive"}
+                })
             });
         }
     }
