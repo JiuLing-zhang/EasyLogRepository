@@ -54,6 +54,10 @@ namespace EasyLogRepository
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
 
             app.UseEndpoints(endpoints =>
             {
