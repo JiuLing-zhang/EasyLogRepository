@@ -30,9 +30,9 @@ namespace EasyLogRepository
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyDbContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQL"), MySqlServerVersion.LatestSupportedServerVersion));
-
-            services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            var sqlConnection = Configuration.GetConnectionString("SQL");
+            services.AddDbContext<MyDbContext>(option => option.UseSqlServer(sqlConnection));
+            services.AddMvc();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -60,7 +60,6 @@ namespace EasyLogRepository
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseMvcWithDefaultRoute();
 
             app.UseEndpoints(endpoints =>
             {
