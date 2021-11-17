@@ -22,7 +22,7 @@
   },
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "MySQL": "server=xx;userid=xx;password=xx;database=xx;"
+    "SQL": "Server=xxx;User ID=xxx;password=xxx;Database=xxx;"
   },
   "PublishAppKey": "xxxx"
 }
