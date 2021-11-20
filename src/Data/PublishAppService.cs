@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyLogRepository.DbContext;
 using EasyLogRepository.Models;
+using EasyLogRepository.Models.Dto;
 using JiuLing.CommonLibs.ExtensionMethods;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Configuration;
@@ -26,12 +27,12 @@ namespace EasyLogRepository.Data
         }
 
         private long maxFileSize = 1024 * 1024 * 200;
-        public async Task<JiuLing.CommonLibs.Model.JsonResult> UploadFile(IBrowserFile file, string key, int versionCode, string versionName)
+        public async Task<JiuLing.CommonLibs.Model.JsonResult> UploadFile(IBrowserFile file, string key, AppInfoDto dto)
         {
             var result = new JiuLing.CommonLibs.Model.JsonResult();
             try
             {
-                if (key.IsEmpty() || versionName.IsEmpty())
+                if (key.IsEmpty() || dto.AppName.IsEmpty() || dto.Platform.IsEmpty() || dto.VersionName.IsEmpty())
                 {
                     result.Code = 1;
                     result.Message = "参数错误";
@@ -46,7 +47,7 @@ namespace EasyLogRepository.Data
                     return result;
                 }
 
-                var fileName = $"MusicPlayerOnline{versionName}.apk";
+                var fileName = $"{dto.AppName}-{dto.Platform}-{dto.VersionName}.apk";
                 var directoryPath = "uploads";
                 var directory = Path.Combine(_hostEnvironment.ContentRootPath, directoryPath);
                 if (!System.IO.Directory.Exists(directory))
@@ -61,8 +62,11 @@ namespace EasyLogRepository.Data
                 var appInfo = new AppInfo()
                 {
                     CreateTime = DateTime.Now,
-                    VersionCode = versionCode,
-                    VersionName = versionName,
+                    AppName = dto.AppName,
+                    Platform = dto.Platform,
+                    VersionCode = dto.VersionCode,
+                    VersionName = dto.VersionName,
+                    MinVersionName = dto.MinVersionName,
                     FilePath = $"{directoryPath}/{fileName}"
                 };
                 _dbContext.AppInfo.Add(appInfo);

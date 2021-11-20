@@ -1,5 +1,6 @@
 ﻿@page "/publish"
 @using EasyLogRepository.Data
+@using EasyLogRepository.Models.Dto
 @inject PublishAppService _publishAppService
 
 <h3>Publish app</h3>
@@ -7,6 +8,18 @@
     <label>
         Key:
         <input type="text" @bind="_key" />
+    </label>
+</p>
+<p>
+    <label>
+        App name:
+        <input type="text" @bind="_appName" />
+    </label>
+</p>
+<p>
+    <label>
+        Platform:
+        <input type="text" @bind="_platform" />
     </label>
 </p>
 <p>
@@ -23,6 +36,12 @@
 </p>
 <p>
     <label>
+        Min version name:
+        <input type="text" @bind="_minVersionName" />
+    </label>
+</p>
+<p>
+    <label>
         <InputFile OnChange="@LoadFiles" multiple />
     </label>
 </p>
@@ -33,13 +52,24 @@
     private const int MaxAllowedFiles = 1;
     private string _message;
     private string _key;
+    private string _appName;
+    private string _platform;
     private int _versionCode;
     private string _versionName;
+    private string _minVersionName;
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         _message = "正在上传";
         IBrowserFile file = e.GetMultipleFiles(MaxAllowedFiles)[0];
-        var result = await _publishAppService.UploadFile(file, _key, _versionCode, _versionName);
+        var appInfo = new AppInfoDto()
+            {
+                AppName = _appName,
+                Platform = _platform,
+                VersionCode = _versionCode,
+                VersionName = _versionName,
+                MinVersionName = _minVersionName
+            };
+        var result = await _publishAppService.UploadFile(file, _key, appInfo);
         _message = result.Message;
 
     }
