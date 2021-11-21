@@ -46,8 +46,15 @@ namespace EasyLogRepository.Data
                     result.Message = "Key值不正确";
                     return result;
                 }
+                //获取扩展名
+                var extension = "";
+                var index = file.Name.LastIndexOf(".");
+                if (index >= 0)
+                {
+                    extension = file.Name.Substring(index + 1);
+                }
 
-                var fileName = $"{dto.AppName}-{dto.Platform}-{dto.VersionName}.apk";
+                var fileName = $"{dto.AppName}-{dto.Platform}-{dto.VersionName}.{extension}";
                 var directoryPath = "uploads";
                 var directory = Path.Combine(_hostEnvironment.ContentRootPath, directoryPath);
                 if (!System.IO.Directory.Exists(directory))
