@@ -7,8 +7,11 @@ namespace EasyLogRepository.Models
     [Table("AppInfo")]
     public class AppInfo
     {
+        /// <summary>
+        /// 文件名的MD5
+        /// </summary>
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
         public DateTime CreateTime { get; set; }
         public string AppName { get; set; }
         public string Platform { get; set; }
@@ -16,5 +19,6 @@ namespace EasyLogRepository.Models
         public string VersionName { get; set; }
         public string MinVersionName { get; set; }
         public string FilePath { get; set; }
+        public string ContentType { get; set; }
     }
 }

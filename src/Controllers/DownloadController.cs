@@ -6,6 +6,7 @@ using EasyLogRepository.DbContext;
 using EasyLogRepository.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 namespace EasyLogRepository.Controllers
 {
@@ -21,9 +22,15 @@ namespace EasyLogRepository.Controllers
             _dbContext = factory.CreateScope().ServiceProvider.GetRequiredService<MyDbContext>();
         }
 
-        [HttpGet("{path}")]
-        public IActionResult Get(string path)
+        [HttpGet("{id}")]
+        public IActionResult Get(string id)
         {
+            var appInfo = _dbContext.AppInfo.Where(x => x.Id == id).FirstOrDefault();
+            if (appInfo == null)
+            {
+                return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult() { Code = 1, Message = "非法请求" });
+            }
+
             var log = new TableLogs()
             {
                 CreateTime = DateTime.Now,
@@ -34,11 +41,11 @@ namespace EasyLogRepository.Controllers
             _dbContext.Logs.Add(log);
             _dbContext.SaveChanges();
 
-            var file = HttpUtility.UrlDecode(path);
+            var file = HttpUtility.UrlDecode(appInfo.FilePath);
             file = file.Replace("/", "\\");
             string filePath = Path.Combine(_hostEnvironment.ContentRootPath, file);
             var stream = System.IO.File.OpenRead(filePath);
-            return File(stream, "application/vnd.android.package-archive", Path.GetFileName(file));
+            return File(stream, appInfo.ContentType, Path.GetFileName(file));
         }
     }
 }

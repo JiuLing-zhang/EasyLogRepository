@@ -40,7 +40,7 @@ namespace EasyLogRepository.Controllers
                     return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult() { Code = 2, Message = "未找到App信息" });
                 }
 
-                string downloadUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/api/download/{HttpUtility.UrlEncode(appInfo.FilePath)}";
+                string downloadUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/api/download/{appInfo.Id}";
                 var obj = new { appInfo.VersionCode, appInfo.VersionName, DownloadUrl = downloadUrl };
                 return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult<object> { Code = 0, Message = "", Data = obj });
             }

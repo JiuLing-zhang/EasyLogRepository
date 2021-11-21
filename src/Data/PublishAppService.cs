@@ -55,6 +55,7 @@ namespace EasyLogRepository.Data
                 }
 
                 var fileName = $"{dto.AppName}-{dto.Platform}-{dto.VersionName}.{extension}";
+                string id = JiuLing.CommonLibs.Security.MD5Utils.GetLowerValue(fileName);
                 var directoryPath = "uploads";
                 var directory = Path.Combine(_hostEnvironment.ContentRootPath, directoryPath);
                 if (!System.IO.Directory.Exists(directory))
@@ -68,6 +69,7 @@ namespace EasyLogRepository.Data
 
                 var appInfo = new AppInfo()
                 {
+                    Id = id,
                     CreateTime = DateTime.Now,
                     AppName = dto.AppName,
                     Platform = dto.Platform,
