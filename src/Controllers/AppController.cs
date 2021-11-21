@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using EasyLogRepository.DbContext;
 using Microsoft.Extensions.DependencyInjection;
+using JiuLing.CommonLibs.ExtensionMethods;
 
 namespace EasyLogRepository.Controllers
 {
@@ -18,16 +19,25 @@ namespace EasyLogRepository.Controllers
         {
             _dbContext = factory.CreateScope().ServiceProvider.GetRequiredService<MyDbContext>();
         }
-
-        [HttpGet]
         public IActionResult Get()
+        {
+            //TODO 暂时兼容下老接口，最终需要删除
+            return Get("MusicPlayerOnline", "android");
+        }
+
+        [HttpGet("{appName}/{platform}")]
+        public IActionResult Get(string appName, string platform)
         {
             try
             {
-                var appInfo = _dbContext.AppInfo.OrderByDescending(x => x.CreateTime).FirstOrDefault();
+                if (appName.IsEmpty() || platform.IsEmpty())
+                {
+                    return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult() { Code = 1, Message = $"非法请求" });
+                }
+                var appInfo = _dbContext.AppInfo.Where(x => x.AppName == appName && x.Platform == platform).OrderByDescending(x => x.CreateTime).FirstOrDefault();
                 if (appInfo == null)
                 {
-                    return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult() { Code = 1, Message = "未找到App信息" });
+                    return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult() { Code = 2, Message = "未找到App信息" });
                 }
 
                 string downloadUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/api/download/{HttpUtility.UrlEncode(appInfo.FilePath)}";

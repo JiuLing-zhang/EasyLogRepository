@@ -19,7 +19,16 @@
 <p>
     <label>
         Platform:
-        <input type="text" @bind="_platform" />
+        @foreach (var platform in _platforms)
+        {
+            <label>
+                <input name="yourColor" type="radio"
+                   value="@platform"
+                   checked="@(_platform == platform)"
+                   @onchange="@(() => { _platform = platform; })">
+                @platform
+            </label>
+        }
     </label>
 </p>
 <p>
@@ -53,6 +62,7 @@
     private string _message;
     private string _key;
     private string _appName;
+    private List<String> _platforms = new List<string> { "windows", "android", "ios" };
     private string _platform;
     private int _versionCode;
     private string _versionName;
