@@ -41,7 +41,7 @@ namespace EasyLogRepository.Controllers
                 }
 
                 string downloadUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/api/download/{appInfo.Id}";
-                var obj = new { appInfo.VersionCode, appInfo.VersionName, DownloadUrl = downloadUrl };
+                var obj = new { appInfo.VersionCode, appInfo.VersionName, appInfo.MinVersionName, DownloadUrl = downloadUrl };
                 return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult<object> { Code = 0, Message = "", Data = obj });
             }
             catch (Exception ex)
