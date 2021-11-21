@@ -76,7 +76,8 @@ namespace EasyLogRepository.Data
                     VersionCode = dto.VersionCode,
                     VersionName = dto.VersionName,
                     MinVersionName = dto.MinVersionName,
-                    FilePath = $"{directoryPath}/{fileName}"
+                    FilePath = $"{directoryPath}/{fileName}",
+                    ContentType = file.ContentType
                 };
                 _dbContext.AppInfo.Add(appInfo);
                 var count = await _dbContext.SaveChangesAsync();
