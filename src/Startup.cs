@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using EasyLogRepository.DbContext;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +28,10 @@ namespace EasyLogRepository
         {
             var sqlConnection = Configuration.GetConnectionString("SQL");
             services.AddDbContext<MyDbContext>(option => option.UseSqlServer(sqlConnection));
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            }); ;
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
