@@ -6,6 +6,8 @@ using System.Web;
 using EasyLogRepository.DbContext;
 using Microsoft.Extensions.DependencyInjection;
 using JiuLing.CommonLibs.ExtensionMethods;
+using JiuLing.CommonLibs.Model;
+using JsonResult = Microsoft.AspNetCore.Mvc.JsonResult;
 
 namespace EasyLogRepository.Controllers
 {
@@ -18,11 +20,6 @@ namespace EasyLogRepository.Controllers
         public AppController(IServiceScopeFactory factory)
         {
             _dbContext = factory.CreateScope().ServiceProvider.GetRequiredService<MyDbContext>();
-        }
-        public IActionResult Get()
-        {
-            //TODO 暂时兼容下老接口，最终需要删除
-            return Get("MusicPlayerOnline", "android");
         }
 
         [HttpGet("{appName}/{platform}")]
@@ -39,10 +36,17 @@ namespace EasyLogRepository.Controllers
                 {
                     return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult() { Code = 2, Message = "未找到App信息" });
                 }
-
+                
                 string downloadUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/api/download/{appInfo.Id}";
-                var obj = new { appInfo.VersionCode, appInfo.VersionName, appInfo.MinVersionName, DownloadUrl = downloadUrl };
-                return new JsonResult(new JiuLing.CommonLibs.Model.JsonResult<object> { Code = 0, Message = "", Data = obj });
+                return new JsonResult(new AppUpgradeInfo
+                {
+                    Name = appName,
+                    Version = appInfo.VersionName,
+                    MinVersion = appInfo.MinVersionName,
+                    DownloadUrl = downloadUrl,
+                    CreateTime = appInfo.CreateTime,
+                    Log = ""
+                });
             }
             catch (Exception ex)
             {
