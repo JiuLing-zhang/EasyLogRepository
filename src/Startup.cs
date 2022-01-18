@@ -31,7 +31,8 @@ namespace EasyLogRepository
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-            }); ;
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
